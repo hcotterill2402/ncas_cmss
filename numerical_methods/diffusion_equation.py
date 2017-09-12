@@ -6,16 +6,19 @@ def initialBell(x):
     return np.where(x%1. < 0.5, np.power(np.sin(2*x*np.pi), 2), 0)
 
 #set up x points, initial phi, courant number etc
-nx = 40    #no. x points
-nt = 40    #no. timesteps
+nx = 100    #no. x points
+nt = 2000  #no. timesteps
 x=np.linspace(0.0, 1.0, nx+1) #setting up x values from 0-1 inclusive
 #derived quantities
 dx=1./nx
 #dt=0.01
-dt=0.2*dx
+dt=50*dx
 t=nt*dt
-K=0.0000176
+K=0.00002
 A=(K*dt)/(dx**2)
+
+print (A)
+print (dt)
 
 #3 time levels of phi - create copies
 phi=initialBell(x)
@@ -35,10 +38,10 @@ phi[nx]=phi[0]
 for n in xrange(1,nt):
     #loop over space
     for j in xrange(1,nx):
-        phiNew[j]=phiOld[j]+A*(phi[j+1]-2*phi[j]+phi[j-1])
+        phiNew[j]=phi[j]+A*(phi[j+1]-2*phi[j]+phi[j-1])
     #apply periodic bcs
-    phiNew[0]=phiOld[0]+A*(phi[1]-2*phi[0]+phi[nx-1])
-    phiNew[nx]=phiNew[0]
+    phiNew[0]=phi[0]+A*(phi[1]-2*phi[0]+phi[nx-1])
+    phiNew[nx]=0
 
     #update for next timestep
     phiOld=phi.copy()
