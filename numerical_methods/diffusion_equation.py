@@ -8,45 +8,23 @@ nx = 100    #no. x points
 nt = 2000  #no. timesteps
 x=np.linspace(0.0, 1.0, nx+1) #setting up x values from 0-1 inclusive
 
-A=fn.coefficient(nx, 0.00002, 0.1)
+A=fn.coefficient(nx, 0.00002, 0.5)
 print (A)
 
 #3 time levels of phi - create copies
-phi=fn.initialBell(x)
-phiNew=phi.copy() #new timestep (n+1)
-phiOld=phi.copy() #old timestep (n-1)
+B=fn.initialBell(x)
 
-#FTCS for first timestep (since there is no n-1 value)
-#loop over space
-for j in xrange(1,nx):
-    phi[j]=phiOld[j]+A*(phiOld[j+1]-2*phiOld[j]+phiOld[j-1])
-
-#apply periodic bc's
-phi[0]=phiOld[0]+A*(phiOld[1]-2*phiOld[0]+phiOld[nx-1])
-phi[nx]=phi[0]
-
-#loop over remaining timesteps using FTCS
-for n in xrange(1,nt):
-    #loop over space
-    for j in xrange(1,nx):
-        phiNew[j]=phi[j]+A*(phi[j+1]-2*phi[j]+phi[j-1])
-    #apply periodic bcs
-    phiNew[0]=phi[0]+A*(phi[1]-2*phi[0]+phi[nx-1])
-    phiNew[nx]=phiNew[0]
-
-    #update for next timestep
-    phiOld=phi.copy()
-    phi=phiNew.copy()
+C=fn.diffusion_FTCS(B, nx, nt, A)
 
 
 
 
 #plot solution and compare to analytic solution (Bell curve)
 plt.plot(x, fn.initialBell(x), 'k', label='analytic')
-plt.plot(x, phi, 'b', label='FTCS')
+plt.plot(x, C, 'b', label='FTCS')
 plt.legend(loc='best')
 plt.xlabel('x')
 plt.ylabel('$\phi$')
 plt.axhline(0, linestyle=':', color='black')
 plt.show()
-plt.savefig('diffusion_40points')
+
