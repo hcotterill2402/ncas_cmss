@@ -55,9 +55,9 @@ def diffusion_CTCS(phi, nx, nt, A):
     for n in xrange(1,nt):
         #loop over space
         for j in xrange(1,nx):
-            phiNew[j]=phi[j]+2*A*(phi[j+1]-2*phi[j]+phi[j-1])
+            phiNew[j]=phiOld[j]+2*A*(phi[j+1]-2*phi[j]+phi[j-1])
         #apply periodic bcs
-        phiNew[0]=phi[0]+2*A*(phi[1]-2*phi[0]+phi[nx-1])
+        phiNew[0]=phiOld[0]+2*A*(phi[1]-2*phi[0]+phi[nx-1])
         phiNew[nx]=phiNew[0]
 
         #update for next timestep

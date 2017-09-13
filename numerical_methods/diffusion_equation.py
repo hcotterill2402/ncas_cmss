@@ -5,7 +5,7 @@ import myfunctions as fn
 
 #set up x points, initial phi, courant number etc
 nx = 100    #no. x points
-nt = 2000  #no. timesteps
+nt = 35  #no. timesteps
 x=np.linspace(0.0, 1.0, nx+1) #setting up x values from 0-1 inclusive
 
 A=fn.coefficient(nx, 0.00002, 0.5)
