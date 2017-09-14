@@ -64,4 +64,59 @@ def diffusion_CTCS(phi, nx, nt, A):
         phiOld=phi.copy()
         phi=phiNew.copy()
 
-    return phi    
+    return phi
+
+def linradvection_CTCS(phi, nx, nt, c):
+    phiNew=phi.copy() #new timestep (n+1)
+    phiOld=phi.copy() #old timestep (n-1)
+    #FTCS for first timestep (since there is no n-1 value)
+    #loop over space
+    for j in xrange(1,nx):
+        phi[j]=phiOld[j]-0.5*c*(phiOld[j+1]-phiOld[j-1])
+
+        #apply periodic bc's
+        phi[0]=phiOld[j]-0.5*c*(phiOld[1]-phiOld[nx-1])
+        phi[nx]=phi[0]
+
+#loop over remaining timesteps using CTCS
+    for n in xrange(1,nt):
+        #loop over space
+        for j in xrange(1,nx):
+            phiNew[j]=phiOld[j]-c*(phi[j+1]-phi[j-1])
+        #apply periodic bcs
+        phiNew[0]=phiOld[0]-c*(phi[1]-phi[nx-1])
+        phiNew[nx]=phiNew[0]
+
+        #update for next timestep
+        phiOld=phi.copy()
+        phi=phiNew.copy()
+
+    return phi
+
+
+def linradvection_FTCS(phi, nx, nt, c):
+    phiNew=phi.copy() #new timestep (n+1)
+    phiOld=phi.copy() #old timestep (n-1)
+    #FTCS for first timestep (since there is no n-1 value)
+    #loop over space
+    for j in xrange(1,nx):
+        phi[j]=phiOld[j]-0.5*c*(phiOld[j+1]-phiOld[j-1])
+
+        #apply periodic bc's
+        phi[0]=phiOld[j]-0.5*c*(phiOld[1]-phiOld[nx-1])
+        phi[nx]=phi[0]
+
+#loop over remaining timesteps using CTCS
+    for n in xrange(1,nt):
+        #loop over space
+        for j in xrange(1,nx):
+            phiNew[j]=phi[j]-0.5*c*(phi[j+1]-phi[j-1])
+        #apply periodic bcs
+        phiNew[0]=phi[0]-0.5*c*(phi[1]-phi[nx-1])
+        phiNew[nx]=phiNew[0]
+
+        #update for next timestep
+        phiOld=phi.copy()
+        phi=phiNew.copy()
+
+    return phi
